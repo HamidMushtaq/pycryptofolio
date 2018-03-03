@@ -11,49 +11,19 @@ import os.path
 import locale
 from copy import deepcopy
 
+from pycryptofolio.coin import Coin
+
 CURRENCY="usd" # If no currency is given in coins.txt, USD would be assumed as default.
 
-coins = {}
-coins_combined = {} # Each coin combined from different exchanges 
-total_worth = {}
 total = 0.0
+total_worth = {}
 
 # If no currency is given in coins.txt, USD would be assumed as default
 rj = requests.get('https://api.coinmarketcap.com/v1/ticker/bitcoin/').json()[0]
 btc_ratio = float(rj["price_usd"])
 btc_change1h = float(rj["percent_change_1h"])
 btc_change4h = float(rj["percent_change_24h"])
-
-class Coin(object):
-	def __init__(self, coin_info, amount):
-		self.context = "other"
-		coin_and_context = coin_info.split(':')
-		
-		self.name = coin_and_context[0].strip()
-		self.amount = amount
-		
-		if len(coin_and_context) > 1:
-			self.context = coin_and_context[1].strip()
-		if self.context not in coins:
-			coins[self.context] = []
-			total_worth[self.context] = 0.0
-	
-		if self.name not in coins_combined:
-			coins_combined[self.name] = []
-	
-		try:
-			req_str = 'https://api.coinmarketcap.com/v1/ticker/' + self.name + '/?convert=' + CURRENCY
-			rj = requests.get(req_str).json()[0]
-			self.price_cur = float(rj["price_" + CURRENCY])
-			self.worth = self.amount * self.price_cur
-			self.change1h = float(rj["percent_change_1h"])
-			self.change24h = float(rj["percent_change_24h"])
-		except:
-			self.price_cur = 0
-			self.worth = 0
-			self.change1h = 0
-			self.change24h = 0
-		
+			
 def imageStr(coinInfo):
 	coinName = coinInfo.split(':')[0]
 	if os.path.exists('images/' + coinName + '.png'):
@@ -131,6 +101,7 @@ with open(filepath) as fp:
 		lines = fp.readlines()
 
 print("Gathering all the necessary information...")
+
 for line in lines:
 	x = line.split('=')
 	if len(x) < 2:
@@ -150,11 +121,16 @@ for line in lines:
 		continue
 	
 	coin_amount = x[1].strip()
-	coin = Coin(coin_info, float(coin_amount))
-	coins[coin.context].append(coin)
-	coins_combined[coin.name].append(coin)
+	coin = Coin(coin_info, float(coin_amount), CURRENCY)
+	if Coin.contextListIsEmpty(coin.context):
+		total_worth[coin.context] = 0.0
+	Coin.addCoin(coin.context, coin)
+	Coin.addCoinCombined(coin.name, coin)
 	total_worth[coin.context] = total_worth[coin.context] + coin.worth
 	total = total + coin.worth
+	
+coins = Coin.getCoins()
+coins_combined = Coin.getCoinsCombined()
 	
 def drawRow(i, coin):
 	name = "<a href=\"https://coinmarketcap.com/currencies/%s/\" target=\"_blank\">%s</a>" % (coin.name.lower(), coin.name.upper())
