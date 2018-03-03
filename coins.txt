@@ -1,0 +1,17 @@
+currency=eur
+
+steem:steemit = 102
+
+steem-dollars:steemit = 15.7
+
+cardano:bittrex = 500.5
+
+eos = 10.57
+
+bitcoin-cash = 0.2
+
+bitcoin:bittrex = 0.12
+
+bitcoin = 0.17
+
+ethereum = 3.07
