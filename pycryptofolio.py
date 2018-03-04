@@ -112,7 +112,7 @@ print("Gathering all the necessary information...")
 
 for line in lines:
 	x = line.split('=')
-	if len(x) < 2:
+	if line[0] == '#' or (len(x) < 2):
 		continue
 	coin_info = x[0].strip()
 	coin_name = coin_info.split(':')[0].strip()
