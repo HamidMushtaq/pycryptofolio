@@ -12,6 +12,7 @@ import locale
 from copy import deepcopy
 
 from pycryptofolio.coin import Coin
+from pycryptofolio.exchange import Exchange
 
 CURRENCY="usd" # If no currency is given in coins.txt, USD would be assumed as default.
 
@@ -46,6 +47,13 @@ def drawProgressBar(val, _1h):
 			(0, 0)
 			
 	return s
+	
+def isFloat(s):
+	try:
+		x = float(s)
+		return True
+	except ValueError:
+		return False
 		
 filepath = 'coins.txt'
 now = datetime.datetime.now()
@@ -121,14 +129,33 @@ for line in lines:
 		continue
 	
 	coin_amount = x[1].strip()
-	coin = Coin(coin_info, float(coin_amount), CURRENCY)
-	if Coin.contextListIsEmpty(coin.context):
-		total_worth[coin.context] = 0.0
-	Coin.addCoin(coin.context, coin)
-	Coin.addCoinCombined(coin.name, coin)
-	total_worth[coin.context] = total_worth[coin.context] + coin.worth
-	total = total + coin.worth
-	
+	if coin_amount[0] != '@':
+		coin = Coin(coin_info, float(coin_amount), CURRENCY)
+		if Coin.contextListIsEmpty(coin.context):
+			total_worth[coin.context] = 0.0
+		Coin.addCoin(coin.context, coin)
+		Coin.addCoinCombined(coin.name, coin)
+		total_worth[coin.context] = total_worth[coin.context] + coin.worth
+		total = total + coin.worth
+	else:
+		exchange_key = coin_amount[1:]
+		exchange_name = coin_info
+		print ("EXCHANGE NAME = " + exchange_name + ", EXCHANGE_KEY = " + exchange_key)
+		obj = Exchange.factory(exchange_name)
+		coins_amounts = obj.getCoinsAmounts(exchange_key)
+		for e in coins_amounts:
+			x = e.split('=')
+			coin_info = x[0]
+			coin_name = coin_info.split(':')[0]
+			coin_amount = x[1]
+			coin = Coin(coin_info, float(coin_amount), CURRENCY)
+			if Coin.contextListIsEmpty(coin.context):
+				total_worth[coin.context] = 0.0
+			Coin.addCoin(coin.context, coin)
+			Coin.addCoinCombined(coin.name, coin)
+			total_worth[coin.context] = total_worth[coin.context] + coin.worth
+			total = total + coin.worth
+		
 coins = Coin.getCoins()
 coins_combined = Coin.getCoinsCombined()
 	

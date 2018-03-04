@@ -1,8 +1,6 @@
 currency=eur
 
-steem:steemit = 102
-
-steem-dollars:steemit = 15.7
+steemit = @minnowhelper
 
 cardano:bittrex = 500.5
 
