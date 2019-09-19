@@ -1,7 +1,7 @@
 # The currency you want to see your worth in. Examples are usd, eur and gbp
 currency=eur
 
-steem:steemit = 200 
+steemit = @adnanmajeed
 
 cardano:bittrex = 500.5
 

@@ -187,14 +187,14 @@ for line in lines:
 			coin_info = x[0]
 			coin_name = coin_info.split(':')[0]
 			coin_amount = x[1]
-			coin = Coin(coin_info, float(coin_amount), CURRENCY)
+			coin = Coin(coin_info, float(coin_amount), coins_info)
 			if Coin.contextListIsEmpty(coin.context):
 				total_worth[coin.context] = 0.0
 			Coin.addCoin(coin.context, coin)
 			Coin.addCoinCombined(coin.name, coin)
 			total_worth[coin.context] = total_worth[coin.context] + coin.worth
 			total = total + coin.worth
-		
+
 coins = Coin.getCoins()
 coins_combined = Coin.getCoinsCombined()
 
