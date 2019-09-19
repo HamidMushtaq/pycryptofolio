@@ -1,8 +1,7 @@
 # The currency you want to see your worth in. Examples are usd, eur and gbp
 currency=eur
 
-# All coins from steemit account discordia
-steemit = @discordia
+steem:steemit = 200 
 
 cardano:bittrex = 500.5
 

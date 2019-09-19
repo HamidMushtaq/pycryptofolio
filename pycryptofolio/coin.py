@@ -4,7 +4,7 @@ class Coin(object):
 	coins = {}
 	coins_combined = {} # Each coin combined from different exchanges 
 
-	def __init__(self, coin_info, amount, currency):
+	def __init__(self, coin_info, amount, coins_info):
 		self.context = "other"
 		coin_and_context = coin_info.split(':')
 		
@@ -18,20 +18,18 @@ class Coin(object):
 	
 		if self.name not in Coin.coins_combined:
 			Coin.coins_combined[self.name] = []
-			
-		try:
-			req_str = 'https://api.coinmarketcap.com/v1/ticker/' + self.name + '/?convert=' + currency
-			rj = requests.get(req_str).json()[0]
-			self.price_cur = float(rj["price_" + currency])
+
+		if self.name in coins_info:
+			self.price_cur = coins_info[self.name]['price']
 			self.worth = self.amount * self.price_cur
-			self.change1h = float(rj["percent_change_1h"])
-			self.change24h = float(rj["percent_change_24h"])
-		except:
+			self.change1h = coins_info[self.name]['change_1h']
+			self.change24h = coins_info[self.name]['change_24h']
+		else:
 			self.price_cur = 0
 			self.worth = 0
 			self.change1h = 0
 			self.change24h = 0
-			
+
 	@classmethod
 	def addCoin(cls, context, coin):
 		cls.coins[coin.context].append(coin)

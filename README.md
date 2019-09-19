@@ -1,5 +1,5 @@
 # pycryptofolio
-Add the amount of all your coins in file coins.txt (Example file given), and then just run the python script `pycrptofolio.py`. 
+Add the amount of all your coins in file coins.txt (Example file given), and then just run the python script `pycrptofolio.py`. Note that you must have a file `key.txt` containing your CoinMarketCap API key in the folder from where you are running the program.
 
 ### Format to be used in coins.txt
 1. All lines starting with # are ignored. So, you can put comments in such lines.
