@@ -22,8 +22,8 @@ class Coin(object):
 		if self.name in coins_info:
 			self.price_cur = coins_info[self.name]['price']
 			self.worth = self.amount * self.price_cur
-			self.change1h = coins_info[self.name]['change_1h']
-			self.change24h = coins_info[self.name]['change_24h']
+			self.change1h = 0 if (coins_info[self.name]['change_1h'] == None) else coins_info[self.name]['change_1h']
+			self.change24h = 0 if (coins_info[self.name]['change_24h'] == None) else coins_info[self.name]['change_24h']
 		else:
 			self.price_cur = 0
 			self.worth = 0

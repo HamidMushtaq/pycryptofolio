@@ -62,7 +62,7 @@ def get_coins_info(CUR):
 		for i,coin in enumerate(data['data']):
 			try:
 				info = get_relevant_info(coin, CUR)
-				format_check = "%d. %s, %s, %s -> %g, %g, %g\n" % (i+1, info['name'], info['symbol'], info['id'], info['price'], info['change_1h'], info['change_24h'])
+				format_check = "%d. %s, %s, %s -> %g\n" % (i+1, info['name'], info['symbol'], info['id'], info['price'])
 				coins[info['id']] = info
 			except:
 				print("Exception for coin " + info['name'])
@@ -208,8 +208,8 @@ def drawRow(i, coin):
 		change1h_td = "<td>" + drawProgressBar(coin.change1h, True) + "</td>"
 		change24h_td = "<td>" + drawProgressBar(coin.change24h, False) + "</td>"
 		# Changes with respect to BTC
-		change1h_wrt_btc = coin.change1h - coins_info['bitcoin']['change_1h']
-		change24h_wrt_btc = coin.change24h - coins_info['bitcoin']['change_24h']
+		change1h_wrt_btc = 0 if (coins_info['bitcoin']['change_1h'] is None) else coin.change1h - coins_info['bitcoin']['change_1h']
+		change24h_wrt_btc = 0 if (coins_info['bitcoin']['change_24h'] is None) else coin.change24h - coins_info['bitcoin']['change_24h']
 		change1h_wrt_btc_td = "<td>" + drawProgressBar(change1h_wrt_btc, True) + "</td>"
 		change24h_wrt_btc_td = "<td>" + drawProgressBar(change24h_wrt_btc, False) + "</td>"
 		f.write("\t<td>%d. %s %s</td>\n \t<td>%s</td>\n \t<td>%s</td>\n \t<td>%s</td>\n \t%s\n \t%s\n \t%s\n \t%s\n" % \
